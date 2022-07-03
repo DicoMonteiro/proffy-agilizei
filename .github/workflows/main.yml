@@ -8,9 +8,10 @@ jobs:
   test:
     name: Cypress run
     runs-on: ubuntu-latest
+    container: cypress/browsers:node14.16.0-chrome90-ff88
     steps:
      - name: Checkout
-       uses: actions/checkout@v1
+       uses: actions/checkout@v2
      - name: Instalar as deps do server
        uses: bahmutov/npm-install@v1
        with:
