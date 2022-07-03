@@ -1,59 +1,41 @@
-# This is a basic workflow to help you get started with Actions
+name: Run tests
 
-name: Chrome Tests
-
-# Controls when the workflow will run
 on:
-  workflow_dispatch:
-    inputs:
-      specs:
-        description: 'Run ALL or unique spec'
-        default: web/cypress/integration/*
+  push:
+    branches: [main]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  chrome-ui-tests:
-    runs-on: ubuntu-latest
-    container: web/cypress/browsers:node14.17.6-chrome100-ff98
-    strategy:
-      fail-fast: false
-      matrix:
-        # run copies of the current job in parallel
-        containers: [1]
+  cypress-run:
+    runs-on: ubuntu-16.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        
-      - name: Instalar as deps do server
-        uses: bahmutov/npm-install@v1
-        with:
-          working-directory: server
-          
-      - name: Instalar as deps da web
-        uses: bahmutov/npm-install@v1
-        with:
-          working-directory: web
-
-      - name: 'Componet & API & UI Tests'
-        uses: cypress-io/github-action@v2
-        with:
-          # we have already installed all dependencies above
-          working-directory: web
-          install: false
-          start: npm run start:ci
-          wait-on: 'http://localhost:3000'
-          
-      - name: Upload screenshots
-        uses: actions/upload-artifact@v2.2.0
-        if: failure()
-        with:
-          name: screenshots
-          path: web/cypress/screenshots
+     - name: Checkout
+       uses: actions/checkout@v1
+     - name: Instalar as deps do server
+       uses: bahmutov/npm-install@v1
+       with:
+         working-directory: server
+     - name: Instalar as deps da web
+       uses: bahmutov/npm-install@v1
+       with:
+         working-directory: web
+     - name: Componet & API & UI Tests
+       uses: cypress-io/github-actions@v2
+       with:
+         working-directory: web
+         install: false
+         start: npm run start:ci
+         wait-on: 'http://localhost:3000'
          
-      - name: Upload videos
-        uses: actions/upload-artifact@v2.2.0
-        if: always()
-        with:
-          name: videos
-          path: web/cypress/videos
+     - name: Upload screenshots
+       uses: actions/upload-artifact@v2.2.0
+       if: failure()
+       with:
+         name: screenshots
+         path: web/cypress/screenshots
+         
+     - name: Upload videos
+       uses: actions/upload-artifact@v2.2.0
+       if: always()
+       with:
+         name: videos
+         path: web/cypress/videos
