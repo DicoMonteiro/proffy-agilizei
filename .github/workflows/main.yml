@@ -5,10 +5,8 @@ on:
     branches: [main]
 
 jobs:
-  test:
-    name: Cypress run
-    runs-on: ubuntu-latest
-    container: cypress/browsers:node14.16.0-chrome90-ff88
+  cypress-run:
+    runs-on: ubuntu-20.04
     steps:
      - name: Checkout
        uses: actions/checkout@v2
@@ -21,7 +19,7 @@ jobs:
        with:
          working-directory: web
      - name: Componet & API & UI Tests
-       uses: cypress-io/github-actions@v2
+       uses: cypress-io/github-action@v4
        with:
          working-directory: web
          install: false
